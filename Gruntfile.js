@@ -9,8 +9,6 @@
 
 module.exports = function (grunt) {
 
-  grunt.loadNpmTasks("grunt-tslint");
-
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -146,7 +144,9 @@ module.exports = function (grunt) {
 
     tslint: {
         options: {
-            // can be a configuration object or a filepath to tslint.json
+			configuration: {
+				quotmark: "single"
+			}
         },
         all: {
             src: ['<%= yeoman.app %>/scripts/{,*/}*.ts']
