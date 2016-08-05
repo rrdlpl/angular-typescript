@@ -1,0 +1,15 @@
+<h3>Todo List:</h3>
+<ul class="list-group">
+  
+<li class="list-group-item" ng-class="{completed: todo.completed}" ng-repeat="todo in todoList | orderBy:'completed'">
+  {{todo.title}}
+  <div class="pull-right">
+    <button ng-if="todo.completed" type="button" class="btn btn-default" title="Uncomplete" ng-click="markAsUncompleted(todo)"><span class="glyphicon glyphicon glyphicon-repeat"></span></button>
+    <button ng-if="!todo.completed" type="button" class="btn btn-success" title="Complete" ng-click="markAsCompleted(todo)"><span class="glyphicon glyphicon-ok"></span></button>
+    <a ng-if="!todo.completed" type="button" class="btn btn-default" title="Edit" ng-href="#/todo/details/{{todo.id}}"><span class="glyphicon glyphicon-pencil"></span></a>
+    <button type="button" class="btn btn-danger" title="Remove"><span class="glyphicon glyphicon-remove" ng-click="deleteTodo(todo, $index)"></span></button>
+  </div>
+</li>
+
+
+</ul>
