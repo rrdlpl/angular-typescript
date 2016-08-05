@@ -29,7 +29,19 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'vm'
       })
-      .otherwise({
-        redirectTo: '/'
+      .when('/todo', {
+        templateUrl: 'views/todoList.html',
+        controller: 'TodoListController'
+      }).
+      when('/todo/details/:id', {
+        templateUrl: 'views/todo.html',
+        controller: 'TodoDetailsController'
+      }).
+      when('/todo/details', {
+        templateUrl: 'views/todo.html',
+        controller: 'TodoDetailsController'
+      }).
+      otherwise({
+        redirectTo: '/todo'
       });
   });
