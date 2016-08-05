@@ -9,6 +9,8 @@
 
 module.exports = function (grunt) {
 
+  grunt.loadNpmTasks("grunt-tslint");
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -36,17 +38,11 @@ module.exports = function (grunt) {
       },
       ts: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.ts'],
-        tasks: ['newer:tslint:all', 'newer:typescript', 'copy:transpiled'],
-      },
-      js: {
-        files: ['<%= yeoman.transpiled %>/scripts/{,*/}*.js'],
+        tasks: ['newer:tslint:all', 'newer:typescript', 'copy:transpiled', ],
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: '<%= connect.options.livereload %>',
+          spawn: false
         }
-      },
-      jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['karma']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -54,6 +50,14 @@ module.exports = function (grunt) {
       },
       gruntfile: {
         files: ['Gruntfile.js']
+      },
+      serverfiles:{
+        tasks: ['newer:copy:serverfiles'],
+        files: [
+          '<%= yeoman.app %>/{,*/}*.html',
+          '.tmp/styles/{,*/}*.css',
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+        ]
       },
       livereload: {
         options: {
@@ -98,22 +102,6 @@ module.exports = function (grunt) {
           }
         }
       },
-      test: {
-        options: {
-          port: 9001,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.transpiled)
-            ];
-          }
-        }
-      },
       dist: {
         options: {
           open: true,
@@ -122,31 +110,12 @@ module.exports = function (grunt) {
       }
     },
 
-    // Make sure code styles are up to par and there are no obvious mistakes
-    //jshint: {
-      //options: {
-        //jshintrc: '.jshintrc',
-        //reporter: require('jshint-stylish')
-      //},
-      //all: {
-        //src: [
-          //'Gruntfile.js',
-          //'<%= yeoman.app %>/scripts/{,*/}*.js'
-        //]
-      //},
-      //test: {
-        //options: {
-          //jshintrc: 'test/.jshintrc'
-        //},
-        //src: ['test/spec/{,*/}*.js']
-      //}
-    //},
-
     tslint: {
         options: {
-			configuration: {
-				quotmark: "single"
-			}
+            // can be a configuration object or a filepath to tslint.json
+            configuration: {
+              quotemark: 'single'
+            }
         },
         all: {
             src: ['<%= yeoman.app %>/scripts/{,*/}*.ts']
@@ -207,22 +176,6 @@ module.exports = function (grunt) {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
-      },
-      test: {
-        devDependencies: true,
-        src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
-          js: {
-            block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
-            }
-          }
       }
     },
 
@@ -274,54 +227,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // The following *-min tasks will produce minified files in the dist folder
-    // By default, your `index.html`'s <!-- Usemin block --> will take care of
-    // minification. These next options are pre-configured if you do not wish
-    // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/styles/main.css': [
-    //         '.tmp/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
-
-    // imagemin: {
-      // dist: {
-        // files: [{
-          // expand: true,
-          // cwd: '<%= yeoman.app %>/images',
-          // src: '{,*/}*.{png,jpg,jpeg,gif}',
-          // dest: '<%= yeoman.dist %>/images'
-        // }]
-      // }
-    // },
-
-    // svgmin: {
-      // dist: {
-        // files: [{
-          // expand: true,
-          // cwd: '<%= yeoman.app %>/images',
-          // src: '{,*/}*.svg',
-          // dest: '<%= yeoman.dist %>/images'
-        // }]
-      // }
-    // },
-
     htmlmin: {
       dist: {
         options: {
@@ -363,13 +268,6 @@ module.exports = function (grunt) {
           src: '*.js',
           dest: '.tmp/concat/scripts'
         }]
-      }
-    },
-
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
       }
     },
 
@@ -417,12 +315,18 @@ module.exports = function (grunt) {
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
       },
-	  images: {
-		expand: true,
-		cwd: '<%= yeoman.transpiled %>/images',
-		src: '{,*/}*.{png,jpg,jpeg,gif,svg}',
-		dest: '<%= yeoman.dist %>/images'
-	  }
+      images: {
+          expand: true,
+          cwd: '<%= yeoman.transpiled %>/images',
+          src: '{,*/}*.{png,jpg,jpeg,gif,svg}',
+          dest: '<%= yeoman.dist %>/images'
+	    },
+      serverfiles: {
+        expand: true,
+          cwd: '<%= yeoman.app %>/views',
+          src: '{,*/}*.html',
+          dest: '<%= yeoman.transpiled %>/views'
+      }
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -430,14 +334,9 @@ module.exports = function (grunt) {
       server: [
         'copy:styles'
       ],
-      test: [
-        'copy:styles'
-      ],
       dist: [
         'copy:styles',
 		'copy:images',
-        //'imagemin',
-        //'svgmin'
       ]
     },
 
@@ -453,15 +352,8 @@ module.exports = function (grunt) {
         declaration: true
 		  }
 		}
-  },
-
-    // Test settings
-    karma: {
-      unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
-      }
-    }
+  }
+  
   });
 
 
@@ -488,15 +380,6 @@ module.exports = function (grunt) {
     grunt.task.run(['serve:' + target]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'wiredep',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma'
-  ]);
-
   grunt.registerTask('build', [
     'clean:transpiled',
     'typescript',
@@ -520,7 +403,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'newer:tslint',
-    'test',
     'build'
   ]);
 };
