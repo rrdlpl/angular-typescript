@@ -1,17 +1,24 @@
 'use strict';
+namespace app {
+  interface saveableController {
+    awesomeThings: Array<string>;
+    onSave(): ng.IPromise<any>;
+  }
 
-/**
- * @ngdoc function
- * @name todoApp.controller:AboutCtrl
- * @description
- * # AboutCtrl
- * Controller of the todoApp
- */
-angular.module('todoApp')
-  .controller('AboutCtrl', function () {
-    this.awesomeThings = [
+  class AboutController implements saveableController {
+    public awesomeThings: Array<string> = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
-  });
+    static $inject = [];
+    constructor(private $q: ng.IQService) { }
+
+    public onSave() {
+      return this.$q.defer().promise;
+    }
+  }
+
+  angular.module('todoApp')
+    .controller('AboutCtrl', AboutController);
+}
