@@ -1,19 +1,18 @@
 'use strict'
 namespace app{
   interface ITodoListController{
-    scope: ng.IScope;
+    todoList: Array<any>;
     todoService: any;
   }
 
   class TodoListController implements ITodoListController{
-    scope: ng.IScope;
+    todoList: Array<any>;
     todoService: any;
 
     static $inject = ["$scope", "todoService"];    
-    constructor($scope: ng.IScope, todoService: any) {
-      this.scope = $scope;
+    constructor(todoService: any) {
       this.todoService = todoService;
-      this.scope.todoList = [];
+      this.todoList = [];
     }
 
     public markAsUncompleted(todo) : void {

@@ -32,21 +32,3 @@ angular.module('todoApp').service('todoService', function($http,$resource){
     });
 });
 
-angular.module('todoApp').directive('pslActive', function() {
-  return {
-    restrict: 'A',
-    scope: {
-      path : '@'
-    },
-    link: function(scope, element, attr) {
-      scope.$on('$routeChangeStart', function(next, current) { 
-       if(current.$$route)
-       if(current.$$route.originalPath.match(scope.path)){
-         attr.$addClass("active");
-       }else{
-         attr.$removeClass("active");
-       }
-     });
-    }
-  };
-});
