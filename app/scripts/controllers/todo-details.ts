@@ -1,3 +1,24 @@
+namespace app{
+  interface ITodoDetailsController{
+
+  }
+
+  class TodoDetailsController implements ITodoDetailsController{
+
+    static $inject = ['$scope', 'todoService', '$routeParams', '$location'];
+    constructor(private $scope: ng.IScope, private todoService: any, private $routeParams: any, private $location: any){
+
+    }
+
+    public save() : void {
+      
+
+    }
+  }
+
+  angular.module('todoApp').controller('TodoDetailsController', TodoDetailsController);
+}
+
 angular.module('todoApp').controller('TodoDetailsController', function($scope,todoService, $routeParams, $location) {
   if($routeParams.id){
     todoService.get({id: $routeParams.id}, function(data){
