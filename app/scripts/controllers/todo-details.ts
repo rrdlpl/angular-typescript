@@ -24,11 +24,3 @@ angular.module('todoApp').controller('TodoDetailsController', function($scope,to
     }
   }
 });
-
-angular.module('todoApp').service('todoService', function($http,$resource){
-  return $resource("http://agile-meadow-25662.herokuapp.com/sgarcesg/todos/:id",null,
-    {
-        'update': { method:'PUT' }
-    });
-});
-

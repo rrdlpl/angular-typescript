@@ -21,7 +21,7 @@ angular
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
+        controller: 'MainController',
         controllerAs: 'vm'
       })
       .when('/about', {
@@ -31,17 +31,21 @@ angular
       })
       .when('/todo', {
         templateUrl: 'views/todoList.html',
-        controller: 'TodoListController'
+        controller: 'TodoListController',
+        controllerAs: 'vm'
       }).
       when('/todo/details/:id', {
         templateUrl: 'views/todo.html',
-        controller: 'TodoDetailsController'
+        controller: 'TodoDetailsController',
+        controllerAs: 'vm'
+
       }).
       when('/todo/details', {
         templateUrl: 'views/todo.html',
-        controller: 'TodoDetailsController'
+        controller: 'TodoDetailsController',
+        controllerAs: 'vm'
       }).
       otherwise({
-        redirectTo: '/todo'
+        redirectTo: '/'        
       });
   });

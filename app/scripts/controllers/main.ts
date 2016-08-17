@@ -7,11 +7,26 @@
  * # MainCtrl
  * Controller of the todoApp
  */
-angular.module('todoApp')
+
+namespace app{
+  class MainController{
+    private awesomeThings: Array<String> = [
+      'HTML Boilerplate',
+      'AngularJS',
+      'Karma'
+    ];
+    static $inject = [];
+  }
+
+  angular.module('todoApp').controller('MainController', MainController);
+}
+
+
+/*angular.module('todoApp')
   .controller('MainCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
-  });
+  });*/

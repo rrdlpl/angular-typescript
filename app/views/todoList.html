@@ -1,7 +1,7 @@
 <h3>Todo List:</h3>
 <ul class="list-group">
   
-<li class="list-group-item" ng-class="{completed: todo.completed}" ng-repeat="todo in todoList | orderBy:'completed'">
+<li class="list-group-item" ng-class="{completed: todo.completed}" ng-repeat="todo in vm.todoList | orderBy:'completed'">
   {{todo.title}}
   <div class="pull-right">
     <button ng-if="todo.completed" type="button" class="btn btn-default" title="Uncomplete" ng-click="markAsUncompleted(todo)"><span class="glyphicon glyphicon glyphicon-repeat"></span></button>
