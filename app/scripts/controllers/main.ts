@@ -20,13 +20,3 @@ namespace app{
 
   angular.module('todoApp').controller('MainController', MainController);
 }
-
-
-/*angular.module('todoApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });*/

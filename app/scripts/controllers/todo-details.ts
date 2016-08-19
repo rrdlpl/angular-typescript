@@ -1,47 +1,31 @@
-namespace app{
-  interface ITodoDetailsController{
-
+namespace app {
+  interface ITodoDetailsController {
+    save();
   }
 
-  class TodoDetailsController implements ITodoDetailsController{
+  class TodoDetailsController implements ITodoDetailsController {
+    private todo: any;
+    static $inject = ['todoService', '$routeParams', '$location'];
 
-    static $inject = ['$scope', 'todoService', '$routeParams', '$location'];
-    constructor(private $scope: ng.IScope, private todoService: any, private $routeParams: any, private $location: any){
-
+    constructor(private todoService: ng.resource.IResourceClass<any>, private $routeParams: any, private $location: ng.ILocationService) {
+      if ($routeParams.id) {
+        this.todoService.get({ id: $routeParams.id }, function (data) {
+          this.todo = data;
+        });
+      } else {
+        this.todo = {};
+      }
     }
 
-    public save() : void {
-      
-
+    public save(): void {
+      this.todoService.save(this.todo, function (data) {
+        this.scope.todo = data; //now with ID
+        alert("Saved successfully");
+        this.$location.path('todo');
+      });
     }
   }
 
   angular.module('todoApp').controller('TodoDetailsController', TodoDetailsController);
 }
 
-angular.module('todoApp').controller('TodoDetailsController', function($scope,todoService, $routeParams, $location) {
-  if($routeParams.id){
-    todoService.get({id: $routeParams.id}, function(data){
-      $scope.todo = data;
-    });
-  }else{
-    $scope.todo = {};
-  }
-  
-  
-  $scope.save = function(){
-    if($scope.todo.id){
-      todoService.update({id: $scope.todo.id}, $scope.todo, function(data){
-        $scope.todo = data;
-        alert("Saved successfully");
-        $location.path('todo');
-      });
-    }else{
-      todoService.save($scope.todo, function(data){
-        $scope.todo = data; //now with ID
-        alert("Saved successfully");
-        $location.path('todo');
-      });
-    }
-  }
-});

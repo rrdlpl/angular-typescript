@@ -2,15 +2,15 @@
 namespace app{
   interface ITodoListController{
     todoList: Array<any>;
-    todoService: any;
+    todoService: ng.resource.IResourceClass<any>;
   }
 
   class TodoListController implements ITodoListController{
     todoList: Array<any>;
     todoService: any;
 
-    static $inject = ["$scope", "todoService"];    
-    constructor(todoService: any) {
+    static $inject = ["todoService"];    
+    constructor(todoService: ng.resource.IResourceClass<any>) {
       this.todoService = todoService;
       this.todoList = [];
     }
@@ -33,7 +33,7 @@ namespace app{
 
     public deleteTodo(todo, index): void{
       this.todoService.delete({id: todo.id}, todo, function(){
-          this.scope.todoList.splice(index,1);
+          this.todoList.splice(index,1);
       });
     }
   }
@@ -41,36 +41,3 @@ namespace app{
   angular.module('todoApp')
          .controller('TodoListController', TodoListController);
 }
-/*
-angular.module('todoApp').controller('TodoListController', function($scope, todoService) {
-  $scope.todoList = [];
-  todoService.query(function(data){
-     $scope.todoList = data; //???
-  });
-  
-  $scope.markAsUncompleted = function(todo){
-    todo.completed = false;
-    todoService.update({id: todo.id}, todo, function(){
-      //successful
-    }, function(){
-      //on error
-      todo.completed = true;
-    });
-  }
-  
-  $scope.markAsCompleted = function(todo){
-    todo.completed = true;
-    todoService.update({id: todo.id} , todo, function(){
-      //successful
-    }, function(){
-      //on error
-      todo.completed = false;
-    });
-  }
-  
-  $scope.deleteTodo = function(todo, index){
-    todoService.delete({id: todo.id}, todo, function(){
-      $scope.todoList.splice(index,1);
-    });
-  }  
-});*/
